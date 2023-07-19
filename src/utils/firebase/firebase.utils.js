@@ -8,25 +8,25 @@ import {
   signInWithEmailAndPassword,
   signOut,
   onAuthStateChanged,
-  
 } from 'firebase/auth';
-import { 
-  getFirestore, 
-  doc, 
-  getDoc, 
-  setDoc, 
+import {
+  getFirestore,
+  doc,
+  getDoc,
+  setDoc,
   collection,
   writeBatch,
   query,
-  getDocs } from 'firebase/firestore';
+  getDocs,
+} from 'firebase/firestore';
 
 const firebaseConfig = {
-    apiKey: "AIzaSyBDlqDg6wgVC1CFOENAMBqNm6SieOEmB6o",
-    authDomain: "crwn-clothing-db-e650a.firebaseapp.com",
-    projectId: "crwn-clothing-db-e650a",
-    storageBucket: "crwn-clothing-db-e650a.appspot.com",
-    messagingSenderId: "794885297562",
-    appId: "1:794885297562:web:e04cbf19f3e47878ae1623"
+  apiKey: "AIzaSyBDlqDg6wgVC1CFOENAMBqNm6SieOEmB6o",
+  authDomain: "crwn-clothing-db-e650a.firebaseapp.com",
+  projectId: "crwn-clothing-db-e650a",
+  storageBucket: "crwn-clothing-db-e650a.appspot.com",
+  messagingSenderId: "794885297562",
+  appId: "1:794885297562:web:e04cbf19f3e47878ae1623"
 };
 
 const firebaseApp = initializeApp(firebaseConfig);
@@ -45,7 +45,11 @@ export const signInWithGoogleRedirect = () =>
 
 export const db = getFirestore();
 
-export const addCollectionAndDocuments = async (collectionKey, objectsToAdd) => {
+export const addCollectionAndDocuments = async (
+  collectionKey,
+  objectsToAdd,
+  field
+) => {
   const collectionRef = collection(db, collectionKey);
   const batch = writeBatch(db);
 
@@ -56,21 +60,21 @@ export const addCollectionAndDocuments = async (collectionKey, objectsToAdd) => 
 
   await batch.commit();
   console.log('done');
-} 
+};
 
 export const getCategoriesAndDocuments = async () => {
   const collectionRef = collection(db, 'categories');
-  const q =  query(collectionRef);
+  const q = query(collectionRef);
 
   const querySnapshot = await getDocs(q);
   const categoryMap = querySnapshot.docs.reduce((acc, docSnapshot) => {
     const { title, items } = docSnapshot.data();
     acc[title.toLowerCase()] = items;
     return acc;
-  }, {})
+  }, {});
 
   return categoryMap;
-}
+};
 
 export const createUserDocumentFromAuth = async (
   userAuth,
